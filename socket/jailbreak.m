@@ -93,7 +93,7 @@ void install_zebra(void) {
     status(@"[*] setting supersling permissions\n");
     setuid(0);
     sleep(1);
-    p_spawn(@"/bin/bash", @[@"-c", @"chmod 6755 /usr/libexec/zebra/supersling"]);
+    p_spawn(@"/bin/bash", @[@"-c", @"chmod 6755 /Applications/Zebra.app/supersling"]);
 }
 
 void install_bootstrap(void) {
