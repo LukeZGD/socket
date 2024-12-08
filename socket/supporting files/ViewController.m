@@ -126,7 +126,7 @@
     [self.log insertSubview:blurEffectView atIndex:0];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString* version = [infoDict objectForKey:@"CFBundleVersion"];
-    status(concat(@"[*] made by staturnz @0x7FF7\n[*] version: %@\n", version));
+    status(concat(@"[*] made by staturnz @0x7FF7\n[*] version: %@ unofficial\n", version));
     
 
 #pragma mark - [*]--   Label & Button UI Stuff   --[*]
