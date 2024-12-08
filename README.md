@@ -15,7 +15,7 @@ Before we start ensure you have one of the supported devices:
 - iPad 3,5 (iPad 4 GSM)
 - iPad 3,6 (iPad 4 Global)
 
-1. Download the .ipa file from [here](https://github.com/staturnzz/socket/releases/download/v1.1/socket.ipa) or from releases
+1. Download the .ipa file from [latest release](https://github.com/staturnzz/socket/releases/latest)
 2. Install the .ipa file using [Sideloadly](https://sideloadly.io)
 3. Open the "Socket" app on your device and press "jailbreak"
 4. Enjoy!
@@ -34,7 +34,7 @@ Socket Repo: [https://socket-jb.app/repo](https://socket-jb.app/repo)
 
 *Socket supports all versions of iOS 10, but please note iOS 10.0.2-10.3.2 have not been tested.*
 
-By default this jailbreak does NOT install Cydia, instead it uses [Zebra](https://github.com/zbrateam/Zebra) (v1.1.28)
+By default this jailbreak does NOT install Cydia, instead it uses [Zebra](https://github.com/zbrateam/Zebra)
 
 Also note that this jailbreak does NOT destroy sandbox containers, you may have to resign some apps using the container-resign package, which can be found in the base Socket Repo in Zebra (you need to install this to use it). Then you can run the command as show below using a terminal or ssh. This only is for iOS 10.3 - 10.3.4.
 
