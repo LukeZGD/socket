@@ -21,13 +21,12 @@
 		2FC9C3D9298DFB730078D39B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC9C3D7298DFB730078D39B /* LaunchScreen.storyboard */; };
 		2FC9C3DC298DFB730078D39B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC9C3DB298DFB730078D39B /* main.m */; };
 		2FC9C3FE298DFD3A0078D39B /* patchfinder.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FC9C3EE298DFD3A0078D39B /* patchfinder.c */; };
-		2FC9C403298DFD3A0078D39B /* include in Resources */ = {isa = PBXBuildFile; fileRef = 2FC9C3FA298DFD3A0078D39B /* include */; };
 		2FC9C408298DFE700078D39B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC9C407298DFE700078D39B /* IOKit.framework */; };
 		2FC9C411298DFF570078D39B /* launchctl in Resources */ = {isa = PBXBuildFile; fileRef = 2FC9C40D298DFF570078D39B /* launchctl */; };
 		2FC9C413298DFF570078D39B /* tar in Resources */ = {isa = PBXBuildFile; fileRef = 2FC9C40F298DFF570078D39B /* tar */; };
-		2FE0599C2994BB3300362DF3 /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0599A2994BB3300362DF3 /* offsets.m */; };
-		2FE0599D2994BD4E00362DF3 /* s0cket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE059952994B93E00362DF3 /* s0cket.m */; };
-		2FE0599E2994BD4E00362DF3 /* iosurface.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FE059982994BB3300362DF3 /* iosurface.c */; };
+		E347090F2EDBFDFC002A5015 /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = E34709012EDBFDFC002A5015 /* memory.c */; };
+		E34709102EDBFDFC002A5015 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = E34709022EDBFDFC002A5015 /* util.c */; };
+		E34709112EDBFDFC002A5015 /* oob_entry.c in Sources */ = {isa = PBXBuildFile; fileRef = E347090E2EDBFDFC002A5015 /* oob_entry.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,17 +54,22 @@
 		2FC9C3DB298DFB730078D39B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2FC9C3EE298DFD3A0078D39B /* patchfinder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = patchfinder.c; sourceTree = "<group>"; };
 		2FC9C3F8298DFD3A0078D39B /* patchfinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchfinder.h; sourceTree = "<group>"; };
-		2FC9C3FA298DFD3A0078D39B /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		2FC9C406298DFDDE0078D39B /* IOKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = IOKit; path = omnis10/include/IOKit; sourceTree = "<group>"; };
 		2FC9C407298DFE700078D39B /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = "../sockH3lix-master/IOKit.framework"; sourceTree = "<group>"; };
 		2FC9C40D298DFF570078D39B /* launchctl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = launchctl; sourceTree = "<group>"; };
 		2FC9C40F298DFF570078D39B /* tar */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = tar; sourceTree = "<group>"; };
-		2FE059942994B93E00362DF3 /* s0cket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = s0cket.h; sourceTree = "<group>"; };
-		2FE059952994B93E00362DF3 /* s0cket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = s0cket.m; sourceTree = "<group>"; };
-		2FE059972994BB3300362DF3 /* iosurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iosurface.h; sourceTree = "<group>"; };
-		2FE059982994BB3300362DF3 /* iosurface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iosurface.c; sourceTree = "<group>"; };
-		2FE059992994BB3300362DF3 /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
-		2FE0599A2994BB3300362DF3 /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
+		E34709012EDBFDFC002A5015 /* memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
+		E34709022EDBFDFC002A5015 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		E34709032EDBFDFC002A5015 /* oob_entry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oob_entry.h; sourceTree = "<group>"; };
+		E34709062EDBFDFC002A5015 /* IOTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOTypes.h; sourceTree = "<group>"; };
+		E34709072EDBFDFC002A5015 /* IOKitMig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKitMig.h; sourceTree = "<group>"; };
+		E34709082EDBFDFC002A5015 /* IOKitKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKitKeys.h; sourceTree = "<group>"; };
+		E34709092EDBFDFC002A5015 /* IOReturn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOReturn.h; sourceTree = "<group>"; };
+		E347090A2EDBFDFC002A5015 /* OSMessageNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSMessageNotification.h; sourceTree = "<group>"; };
+		E347090B2EDBFDFC002A5015 /* IOKitLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKitLib.h; sourceTree = "<group>"; };
+		E347090C2EDBFDFC002A5015 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		E347090D2EDBFDFC002A5015 /* memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
+		E347090E2EDBFDFC002A5015 /* oob_entry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oob_entry.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,20 +84,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F205FB82990194B009874C8 /* exploit */ = {
-			isa = PBXGroup;
-			children = (
-				2FC9C3FA298DFD3A0078D39B /* include */,
-				2FE059952994B93E00362DF3 /* s0cket.m */,
-				2FE059942994B93E00362DF3 /* s0cket.h */,
-				2FE059982994BB3300362DF3 /* iosurface.c */,
-				2FE059972994BB3300362DF3 /* iosurface.h */,
-				2FE0599A2994BB3300362DF3 /* offsets.m */,
-				2FE059992994BB3300362DF3 /* offsets.h */,
-			);
-			path = exploit;
-			sourceTree = "<group>";
-		};
 		2F205FBE29901A43009874C8 /* supporting files */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,8 +128,8 @@
 				2FC9C40F298DFF570078D39B /* tar */,
 				2F3AEB3F29A70A3900225C87 /* bootstrap.tar */,
 				2F85CF7029AAAA56006A5520 /* zebra.deb */,
+				E34709002EDBFDFC002A5015 /* exploit */,
 				2F205FBE29901A43009874C8 /* supporting files */,
-				2F205FB82990194B009874C8 /* exploit */,
 				2F205FC029901A8D009874C8 /* patches.m */,
 				2F205FC229901A93009874C8 /* patches.h */,
 				2FAEB01A298F443E0064B435 /* jailbreak.h */,
@@ -159,6 +149,41 @@
 				2FC9C406298DFDDE0078D39B /* IOKit */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E34709002EDBFDFC002A5015 /* exploit */ = {
+			isa = PBXGroup;
+			children = (
+				E34709012EDBFDFC002A5015 /* memory.c */,
+				E34709022EDBFDFC002A5015 /* util.c */,
+				E34709032EDBFDFC002A5015 /* oob_entry.h */,
+				E34709042EDBFDFC002A5015 /* include */,
+				E347090C2EDBFDFC002A5015 /* util.h */,
+				E347090D2EDBFDFC002A5015 /* memory.h */,
+				E347090E2EDBFDFC002A5015 /* oob_entry.c */,
+			);
+			path = exploit;
+			sourceTree = "<group>";
+		};
+		E34709042EDBFDFC002A5015 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E34709052EDBFDFC002A5015 /* IOKit */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E34709052EDBFDFC002A5015 /* IOKit */ = {
+			isa = PBXGroup;
+			children = (
+				E34709062EDBFDFC002A5015 /* IOTypes.h */,
+				E34709072EDBFDFC002A5015 /* IOKitMig.h */,
+				E34709082EDBFDFC002A5015 /* IOKitKeys.h */,
+				E34709092EDBFDFC002A5015 /* IOReturn.h */,
+				E347090A2EDBFDFC002A5015 /* OSMessageNotification.h */,
+				E347090B2EDBFDFC002A5015 /* IOKitLib.h */,
+			);
+			path = IOKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,7 +249,6 @@
 				2FC9C3D6298DFB730078D39B /* Assets.xcassets in Resources */,
 				2F05ECFD299B358C00020F1B /* hack.ttf in Resources */,
 				2FC9C413298DFF570078D39B /* tar in Resources */,
-				2FC9C403298DFD3A0078D39B /* include in Resources */,
 				2FC9C3D4298DFB720078D39B /* Main.storyboard in Resources */,
 				2FC9C411298DFF570078D39B /* launchctl in Resources */,
 			);
@@ -237,15 +261,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FE0599D2994BD4E00362DF3 /* s0cket.m in Sources */,
-				2FE0599E2994BD4E00362DF3 /* iosurface.c in Sources */,
 				2F9FD7D9299D6ADD009D1ED3 /* Settings.m in Sources */,
+				E34709112EDBFDFC002A5015 /* oob_entry.c in Sources */,
 				2FAEB019298F3DED0064B435 /* jailbreak.m in Sources */,
 				2F9FD7D6299C5EAA009D1ED3 /* Credits.m in Sources */,
 				2FC9C3D1298DFB720078D39B /* ViewController.m in Sources */,
+				E347090F2EDBFDFC002A5015 /* memory.c in Sources */,
+				E34709102EDBFDFC002A5015 /* util.c in Sources */,
 				2FC9C3CB298DFB720078D39B /* AppDelegate.m in Sources */,
 				2FC9C3DC298DFB730078D39B /* main.m in Sources */,
-				2FE0599C2994BB3300362DF3 /* offsets.m in Sources */,
 				2F205FC129901A8E009874C8 /* patches.m in Sources */,
 				2FC9C3FE298DFD3A0078D39B /* patchfinder.c in Sources */,
 			);
@@ -404,7 +428,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -420,7 +444,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.staturnz.socket;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -443,7 +467,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -459,7 +483,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.staturnz.socket;
 				PRODUCT_NAME = "$(TARGET_NAME)";

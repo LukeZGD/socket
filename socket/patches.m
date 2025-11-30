@@ -14,7 +14,7 @@
 #include <sys/mount.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
-#include "exploit/s0cket.h"
+#include "exploit/memory.h"
 #include "jailbreak.h"
 #include "patches.h"
 #include "common.h"
@@ -45,33 +45,8 @@ uint32_t sbcall_debugger;
 uint32_t vfsContextCurrent;
 uint32_t vnodeGetattr;
 uint32_t _allproc;
-uint32_t kernel_pmap;
 uint32_t kernelConfig_stub;
 uint32_t sb_ops;
-
-
-#pragma mark - [*]--   Page Table Patching   --[*]
-
-static void patch_page_table(uint32_t tte_virt, uint32_t tte_phys, uint32_t page) {
-    uint32_t i = page >> 20;
-    uint32_t j = (page >> 12) & 0xFF;
-    uint32_t addr = tte_virt+(i<<2);
-    uint32_t entry = rk32(addr);
-    if ((entry & L1_PAGE_PROTO) == L1_PAGE_PROTO) {
-        uint32_t page_entry = ((entry & L1_COARSE_PT) - tte_phys) + tte_virt;
-        uint32_t addr2 = page_entry+(j<<2);
-        uint32_t entry2 = rk32(addr2);
-        if (entry2) {
-            uint32_t new_entry2 = (entry2 & (~L2_PAGE_APX));
-            wk32(addr2, new_entry2);
-        }
-    } else if ((entry & L1_SECT_PROTO) == L1_SECT_PROTO) {
-        uint32_t new_entry = L1_PROTO_TTE(entry);
-        new_entry &= ~L1_SECT_APX;
-        wk32(addr, new_entry);
-    }
-    usleep(100000);
-}
 
 
 #pragma mark - [*]--   Make Wide Branch   --[*]
@@ -117,7 +92,6 @@ void find_patches(uint32_t region, unsigned char *k_data, size_t ksize) {
     vfsContextCurrent = find_vfs_context_current(region, k_data, ksize);
     vnodeGetattr = find_vnode_getattr(region, k_data, ksize);
     _allproc = find_allproc(region, k_data, ksize);
-    kernel_pmap = find_kernel_pmap(region, k_data, ksize);
     kernelConfig_stub = find_lwvm_i_can_has_krnl_conf_stub(region, k_data, ksize);
     sb_ops = find_sbops(region, k_data, ksize);
 }
@@ -126,53 +100,51 @@ void find_patches(uint32_t region, unsigned char *k_data, size_t ksize) {
 #pragma mark - [*]--   Patches   --[*]
 
 static void patch_tfp0(uint32_t p, uint32_t c){
-    patch_page_table(tte_virt, tte_phys, (p & ~0xFFF));wk16(p, 0xbf00);
-    patch_page_table(tte_virt, tte_phys, ((c+1) & ~0xFFF));wk8(c+1, 0xe0);
+    kwrite16_exec(p, 0xbf00);
+    kwrite8_exec(c+1, 0xe0);
     status(@"[*] tfp0: patched\n");
 }
 
 static void patch_i_can_has_debugger(uint32_t p){
-    patch_page_table(tte_virt, tte_phys, (p & ~0xFFF));wk32(p, 1);
+    kwrite32_exec(p, 1);
     status(@"[*] i_can_has_debugger: patched\n");
 }
 
 static void patch_vm_fault_enter(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));wk32(addr, 0x0b01f04f);
+    kwrite32_exec(addr, 0x0b01f04f);
     status(@"[*] vm_fault_enter: patched\n");
 }
 
 static void patch_vm_map_enter(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));wk32(addr, 0xbf00bf00);
+    kwrite32_exec(addr, 0xbf00bf00);
     status(@"[*] vm_map_enter: patched\n");
 }
 
 static void patch_vm_map_protect(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));wk32(addr, 0xbf00bf00);
+    kwrite32_exec(addr, 0xbf00bf00);
     status(@"[*] vm_map_protect: patched\n");
 }
 
 static void patch_mount(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, ((addr+1) & ~0xFFF));wk8((addr+1), 0xe0);
+    kwrite8_exec((addr+1), 0xe0);
     status(@"[*] mount: patched\n");
 }
 
 static void patch_sbcall_debugger(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));wk32(addr, 0xbf00bf00);
+    kwrite32_exec(addr, 0xbf00bf00);
     status(@"[*] sbcall_debugger: patched\n");
 }
 
 static void patch_csops(uint32_t addr){
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));
-    if((addr & ~0xFFF) != ((addr+4) & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr+4) & ~0xFFF));
-    wk32(addr, 0xbf00bf00);wk16(addr+4, 0xbf00);
+    kwrite32_exec(addr, 0xbf00bf00);
+    kwrite16_exec(addr+4, 0xbf00);
     status(@"[*] csops: patched\n");
 }
 
 static void patch_mapForIO(uint32_t addr, uint32_t ptr, uint32_t ret1){
-    patch_page_table(tte_virt, tte_phys, (ptr & ~0xFFF));
-    patch_page_table(tte_virt, tte_phys, (addr & ~0xFFF));
-    if((addr & ~0xFFF) != ((addr+4) & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr+4) & ~0xFFF));
-    wk32(addr, 0xbf002000);wk32(addr+4, 0xbf00bf00);wk32(ptr, ret1);
+    kwrite32_exec(addr, 0xbf002000);
+    kwrite32_exec(addr+4, 0xbf00bf00);
+    kwrite32_exec(ptr, ret1);
     status(@"[*] mapForIO: patched\n");
 }
 
@@ -181,44 +153,35 @@ static void patch_mapForIO(uint32_t addr, uint32_t ptr, uint32_t ret1){
 
 void patch_amfi(void) {
     uint32_t addr_1 = amfi_ret + k_base;
-    patch_page_table(tte_virt, tte_phys, (addr_1 & ~0xFFF));
     uint32_t unbase_addr = addr_1 - k_base;
     uint32_t unbase_shc = shc - k_base;
     uint32_t val = branch_wide(unbase_addr, unbase_shc);
-    wk32(addr_1, val);
+    kwrite32_exec(addr_1, val);
     status(@"[*] amfi_execve_ret: patched\n");
     
     uint32_t addr_2 = amfi_cred_label_update_execve + k_base;
-    patch_page_table(tte_virt, tte_phys, (addr_2 & ~0xFFF));
-    if(((addr_2+4+1) & ~0xFFF) != (addr_2 & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr_2+4+1) & ~0xFFF));
-    wk32(addr_2, 0xbf00bf00);
-    wk32((addr_2+4+1), 0xe0);
+    kwrite32_exec(addr_2, 0xbf00bf00);
+    kwrite32_exec((addr_2+4+1), 0xe0);
     status(@"[*] amfi_cred_label_update_execve: patched\n");
     
     uint32_t addr_3 = amfi_vnode_check_signature + k_base;
-    patch_page_table(tte_virt, tte_phys, (addr_3 & ~0xFFF));
-    if(((addr_3+0x10) & ~0xFFF) != (addr_3 & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr_3+0x10) & ~0xFFF));
-    wk32(addr_3, 0xbf00bf00);
-    wk32(addr_3+4, 0xbf00bf00);
-    wk32(addr_3+8, 0xbf00bf00);
-    wk32(addr_3+12, 0xbf00bf00);
-    wk32(addr_3+16, 0xbf00bf00);
+    kwrite32_exec(addr_3, 0xbf00bf00);
+    kwrite32(addr_3+4, 0xbf00bf00);
+    kwrite32(addr_3+8, 0xbf00bf00);
+    kwrite32(addr_3+12, 0xbf00bf00);
+    kwrite32_exec(addr_3+16, 0xbf00bf00);
     status(@"[*] amfi_vnode_check_signature: patched\n");
     
     uint32_t addr_4 = amfi_loadEntitlementsFromVnode + k_base;
-    patch_page_table(tte_virt, tte_phys, (addr_4 & ~0xFFF));
-    if(((addr_4+4) & ~0xFFF) != (addr_4 & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr_4+4) & ~0xFFF));
-    wk32(addr_4, 0xbf00bf00);
-    wk16(addr_4+4, 0xbf00);
-    wk16(addr_4+6, 0x2001);
+    kwrite32_exec(addr_4, 0xbf00bf00);
+    kwrite16_exec(addr_4+4, 0xbf00);
+    kwrite16(addr_4+6, 0x2001);
     status(@"[*] amfi_loadEntitlementsFromVnode: patched\n");
 
     uint32_t addr_5 = amfi_vnode_check_exec + k_base;
-    patch_page_table(tte_virt, tte_phys, (addr_5 & ~0xFFF));
-    if(((addr_5+8) & ~0xFFF) != (addr_5 & ~0xFFF)) patch_page_table(tte_virt, tte_phys, ((addr_5+8) & ~0xFFF));
-    wk32(addr_5, 0xbf00bf00);
-    wk32(addr_5+4, 0xbf00bf00);
-    wk32(addr_5+8, 0xbf00bf00);
+    kwrite32_exec(addr_5, 0xbf00bf00);
+    kwrite32(addr_5+4, 0xbf00bf00);
+    kwrite32_exec(addr_5+8, 0xbf00bf00);
     status(@"[*] amfi_vnode_check_exec: patched\n");
 }
 
@@ -226,16 +189,7 @@ void patch_amfi(void) {
 #pragma mark - [*]--   Main Patching Function   --[*]
 
 void apply_patches(void) {
-    uint32_t pmap = kernel_pmap + k_base;
-    status(concat(@"[*] pmap: 0x%08x\n", pmap));
-    uint32_t pmap_store = rk32(pmap);
-    status(concat(@"[*] pmap store: 0x%08x\n", pmap_store));
-    tte_virt = rk32(pmap_store);
-    status(concat(@"[*] tte_virt: 0x%08x\n", tte_virt));
-    tte_phys = rk32(pmap_store+4);
-    status(concat(@"[*] tte_phys: 0x%08x\n", tte_phys));
-
-    wk32(proc_enforce + k_base, 0);
+    kwrite32(proc_enforce + k_base, 0);
     patch_i_can_has_debugger(i_can_has_debugger_1 + k_base);
     patch_i_can_has_debugger(i_can_has_debugger_2 + k_base);
     patch_vm_fault_enter(vm_fault_enter + k_base);
@@ -255,16 +209,15 @@ void apply_patches(void) {
         0x3d4, 0x168, 0x29c, 0x288, 0x278, 0x3e4, 0x3e8
     };
      
-    for (int i = 0; i < 37; i++) wk32(sbops + mpo[i], 0);
+    for (int i = 0; i < 37; i++) kwrite32(sbops + mpo[i], 0);
     uint32_t execve = sbops + 0x48;
-    uint32_t execve_ptr = rk32(execve);
+    uint32_t execve_ptr = kread32(execve);
     shc = k_base + 0xd00;
     unsigned char buf[432];
     memcpy(buf, shc_bin, 432);
     *(uint32_t*)(buf+0x019c) = k_base + vfsContextCurrent + 1;
     *(uint32_t*)(buf+0x01a0) = k_base + vnodeGetattr + 1;
     *(uint32_t*)(buf+0x01a4) = execve_ptr;
-    patch_page_table(tte_virt, tte_phys, (shc & ~0xFFF));
-    kwrite(shc, buf, 432);sleep(1);
-    wk32(execve, (shc+4)+1);
+    kwrite_buf_exec(shc, buf, 432);sleep(1);
+    kwrite32(execve, (shc+4)+1);
 }

